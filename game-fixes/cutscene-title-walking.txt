@@ -1,0 +1,200 @@
+.if REGION == "JAPAN"
+	org 0x0, 0x2a0b
+
+
+.elseif REGION == "USA"
+	org 0x0, 0x2a1e
+
+.endif
+
+
+	ld a, 0x90+20		; snoopy start left xpos
+
+
+
+
+; ##################################################################
+
+
+
+
+.if REGION == "JAPAN"
+	org 0x0, 0x2a1f
+
+
+.elseif REGION == "USA"
+	org 0x0, 0x2a32
+
+
+.endif
+
+
+	ld a, 0x90+20		; spike start left xpos
+
+
+
+
+; ##################################################################
+
+
+
+
+.if REGION == "JAPAN"
+	org 0x0, 0x291d
+
+
+.elseif REGION == "USA"
+	org 0x0, 0x2930
+
+
+.endif
+
+
+	cp a, 0x0f+0		; spike start left timer
+
+
+
+
+; ##################################################################
+
+
+
+
+.if REGION == "JAPAN"
+	org 0x0, 0x290a
+
+
+.elseif REGION == "USA"
+	org 0x0, 0x291d
+
+
+.endif
+
+
+	cp a, 0x29+10		; snoopy stop left timer
+
+
+
+
+; ##################################################################
+
+
+
+
+.if REGION == "JAPAN"
+	org 0x0, 0x28e7
+
+
+.elseif REGION == "USA"
+	org 0x0, 0x28fa
+
+
+.endif
+
+
+	cp a, 0x40+4		; walk left stop
+
+
+
+
+; ##################################################################
+
+
+
+
+.if REGION == "JAPAN"
+	org 0x0, 0x293c
+
+
+.elseif REGION == "USA"
+	org 0x0, 0x294f
+
+
+.endif
+
+
+	cp a, 0x40+4		; snoopy start right timer
+
+
+
+
+; ##################################################################
+
+
+
+
+.if REGION == "JAPAN"
+	org 0x0, 0x297a
+
+
+.elseif REGION == "USA"
+	org 0x0, 0x298d
+
+
+.endif
+
+
+	cp a, 0x4f+4		; spike start right timer
+
+
+
+
+; ##################################################################
+
+
+
+
+.if REGION == "JAPAN"
+	org 0x0, 0x2967
+
+
+.elseif REGION == "USA"
+	org 0x0, 0x297a
+
+
+.endif
+
+
+	cp a, 0x71+12		; stop snoopy right timer
+
+
+
+
+; ##################################################################
+
+
+
+
+.if REGION == "JAPAN"
+	org 0x0, 0x294a
+
+
+.elseif REGION == "USA"
+	org 0x0, 0x295d
+
+
+.endif
+
+
+	cp a, 0x85+7		; reset snoopy walk timer
+
+
+
+
+; ##################################################################
+
+
+
+
+.if REGION == "JAPAN"
+	org 0x0, 0x2990
+
+
+.elseif REGION == "USA"
+	org 0x0, 0x29a3
+
+
+.endif
+
+
+	cp a, 0x85+7		; reset spikewalk timer

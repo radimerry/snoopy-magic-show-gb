@@ -1,8 +1,8 @@
 /*
-Animate star palette
+Animate star and "the end" palette
 
 
-Cycle through mono shades
+Cycle through shades
 */
 
 
@@ -14,29 +14,23 @@ org 0x0, 0x33e4
 
 
 	and a, 0x03
-	add a, a
-	add a, a
-	add a, a
+	add a, a :: add a, a :: add a, a :: add a, a
 	add a, @palette & 0xff
 	ld l, a
 	ld h, @palette >> 8
 
 
 	di
-	call @wait
 
 
-	ld b, 0x06
-
-@@loop:
-	ldi a, (hl)
-	ldh (0x69), a
-
-	dec b
-	jr nz, @@loop
+@wait:
+	ldh a, (0x41)
+	and a, 0x03
+	cp a, 0x01
+	jr nz, @wait
 
 
-	reti
+	jp @update
 
 
 warnpc 0x3400
@@ -49,18 +43,38 @@ warnpc 0x3400
 
 
 
-org 0x1, 0x7fc0
+org 0x1, 0x7f90
 
 
-@wait:
-	ldh a, (0x41)
-	and a, 0x03
-	cp a, 0x01
-	jr nz, @wait
-
-
+@update:
 	ld a, 0x82		; bg 0 [1-2-3]
+	call @@copy
+
+
+	ld a, 0x9a		; bg 3 [1-2-3]
+	call @@copy
+
+
+	reti
+
+
+
+; ======================================================
+
+
+
+@@copy:
 	ldh (0x68), a
+	ld b, 0x06
+
+
+@@loop:
+	ldi a, (hl)
+	ldh (0x69), a
+
+	dec b
+	jr nz, @@loop
+
 
 	ret
 
@@ -68,10 +82,21 @@ org 0x1, 0x7fc0
 
 
 @palette:
-	.dh 0x79f2, 0x5ca8, 0x0000, 0x0000	; 210
-	.dh 0x5ca8, 0x0000, 0x5ca8, 0x0000	; 101
-	.dh 0x0000, 0x5ca8, 0x79f2, 0x0000	; 012
-	.dh 0x5ca8, 0x79f2, 0x5ca8, 0x0000	; 121
+	.dh 0x79f2, 0x5ca8, 0x0000	; 210
+	.dh 0x0fd6, 0x1014, 0x0000
+	.dh 0x0000, 0x0000
+
+	.dh 0x5ca8, 0x0000, 0x5ca8	; 101
+	.dh 0x1014, 0x0000, 0x1014
+	.dh 0x0000, 0x0000
+
+	.dh 0x0000, 0x5ca8, 0x79f2	; 012
+	.dh 0x0000, 0x1014, 0x0fd6
+	.dh 0x0000, 0x0000
+
+	.dh 0x5ca8, 0x79f2, 0x5ca8	; 121
+	.dh 0x1014, 0x0fd6, 0x1014
+	.dh 0x0000, 0x0000
 
 
 warnpc 0x7ff0
