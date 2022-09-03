@@ -1,0 +1,483 @@
+/*
+Switch between Snoopy and Spike at stage menu
+*/
+
+
+org 0x0, 0x1e6b
+	ldh a, (0x8d)		; joypad
+	add a,a			; A button  [exit]
+	ret c
+
+	jp @menu_stage_joypad
+
+warnpc 0x1e72
+
+
+
+
+
+
+org 0x0, 0x1f15
+	call @menu_stage_player
+	nop
+
+
+
+
+
+
+.if REGION == "JAPAN"
+	org 0x0, 0x2794
+
+.elseif REGION == "USA"
+	org 0x0, 0x27a7
+
+.endif
+
+	call @menu_reset_single
+
+
+
+
+; ################################################################
+
+
+
+
+.if REGION == "JAPAN"
+	org 0x0, 0x39bc
+
+.elseif REGION == "USA"
+	org 0x0, 0x39cf
+
+.endif
+
+	call @game_start_1p
+	nop :: nop
+
+
+
+
+
+
+.if REGION == "JAPAN"
+	org 0x0, 0x3847
+
+.elseif REGION == "USA"
+	org 0x0, 0x385a
+
+.endif
+
+	call @game_joypad_read
+
+
+
+
+
+
+.if REGION == "JAPAN"
+	org 0x1, 0x577f
+
+.elseif REGION == "USA"
+	org 0x1, 0x5792
+
+.endif
+
+	call @game_pickup_woodstock
+
+
+
+
+
+
+.if REGION == "JAPAN"
+	org 0x1, 0x456e
+
+.elseif REGION == "USA"
+	org 0x1, 0x4581
+
+.endif
+
+	call @game_pickup_bonus
+
+
+
+
+
+
+.if REGION == "JAPAN"
+	org 0x01, 0x4622
+
+.elseif REGION == "USA"
+	org 0x01, 0x4635
+
+.endif
+
+	ld a, (0xc40f)		; if (spike sprite == valid tile)
+	or a
+	add a, 0x28
+	ret c
+
+	ld (0xc40f), a
+	ret
+
+
+.if REGION == "JAPAN"
+	warnpc 0x462d
+
+.elseif REGION == "USA"
+	warnpc 0x4640
+
+.endif
+
+
+
+
+; ################################################################
+
+
+
+
+.if REGION == "JAPAN"
+	org 0x1, 0x55b2
+
+.elseif REGION == "USA"
+	org 0x1, 0x55c5
+
+.endif
+
+	call @game_start_1p_ai
+	nop :: nop
+
+
+
+
+
+
+.if REGION == "JAPAN"
+	org 0x1, 0x563e
+
+.elseif REGION == "USA"
+	org 0x1, 0x5651
+
+.endif
+
+	call @game_ready_ai		; if (ai player == alive)
+	bit 0, a
+
+
+
+
+
+
+.if REGION == "JAPAN"
+	org 0x0, 0x379b
+
+.elseif REGION == "USA"
+	org 0x0, 0x37ae
+
+.endif
+
+	call @game_player_ai
+
+
+
+
+
+
+.if REGION == "JAPAN"
+	org 0x1, 0x44f5
+
+.elseif REGION == "USA"
+	org 0x1, 0x4508
+
+.endif
+
+	call @game_attack_ai
+
+
+
+
+
+
+.if REGION == "JAPAN"
+	org 0x1, 0x4652
+
+.elseif REGION == "USA"
+	org 0x1, 0x4665
+
+.endif
+
+
+@game_player_died:
+	ld a, (0xc416)			; if (frame == 0-1)
+	and a, 0x02
+	ret nz
+
+
+	ld a, (0xc400)			; if (player == spike)
+	bit 4, a
+
+.if REGION == "JAPAN"
+	call nz, 0x4622			; change sprite
+
+.elseif REGION == "USA"
+	call nz, 0x4635			; change sprite
+
+.endif
+
+
+	ld a, (0xc40f)			; if (player died)
+	inc a
+	ret nz
+
+
+	ld a, (0xc400)			; stop player
+	res 0, a
+	ld (0xc400), a
+
+	ret
+
+	; 20 bytes
+
+
+.if REGION == "JAPAN"
+	warnpc 0x4682
+
+.elseif REGION == "USA"
+	warnpc 0x4695
+
+.endif
+
+
+
+
+; ################################################################
+
+
+
+
+.if REGION == "JAPAN"
+	org 0x1, 0x7180
+
+.elseif REGION == "USA"
+	org 0x1, 0x7190
+
+.endif
+
+
+@menu_reset_single:
+	xor a			; snoopy
+	ld (0xdfff), a
+
+
+.if REGION == "JAPAN"
+	jp 0x2862
+
+.elseif REGION == "USA"
+	jp 0x2875
+
+.endif
+
+
+
+
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+@menu_stage_joypad:
+	add a,a			; B button
+	add a,a			; select button  [swap]
+	jr nc, @@normal
+
+
+
+@@swap:
+	ld a, (0xdfff)		; 00 = snoopy, 01 = spike
+	inc a
+	and a, 0x01
+	ld (0xdfff), a
+
+
+
+@@normal:
+	jp 0x1e5c
+
+
+
+
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+@menu_stage_player:
+	ld a, (0xdfff)		; if (player == spike)
+	or a
+	jr z, @@exit
+
+
+
+@@spike:
+	ld a, 0x28		; use spike sprite
+
+
+
+@@exit:
+	ld (0xc40f), a
+	ret
+
+
+
+
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+@game_joypad_read:
+@game_pickup_woodstock:
+@game_pickup_bonus:
+@game_die_ai:
+	ld a, (0xc363)		; if (game == 1p)
+	bit 2, a
+	jr nz, @@versus_2p
+
+
+	ld a, (0xdfff)		; if (1p == spike)
+	or a
+	jr z, @@snoopy_1p
+
+
+	ld a, (0xc400)		; joypad = flip player
+	xor a, 0x10
+	ret
+
+
+
+
+@@snoopy_1p:
+@@versus_2p:
+	ld a, (0xc400)		; joypad = normal player
+	ret
+
+
+
+
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+@game_start_1p:
+	ld a, (0xc363)		; if (game == 1p)
+	bit 2, a
+	jr nz, @@versus_2p
+
+
+	ld a, (0xdfff)		; if (1p == spike)
+	or a
+	jr z, @@snoopy_1p
+
+
+	ld a, 0x11		; player = spike
+	ld (0xc420), a
+
+	ld a, 0x28		; sprite = spike
+	ld (0xc42f), a
+	ret
+
+
+
+
+@@snoopy_1p:
+@@versus_2p:
+	ld a, 0x01		; default = snoopy
+	ld (0xc420), a
+	ret
+
+
+
+
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+@game_sprite_spike:
+	cp a, 0xff		; if (player not dead)
+	ret z
+
+
+	add a, 0x28		; use spike sprite
+	ld (0xc40f), a
+
+	ret
+
+
+
+
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+@game_start_1p_ai:
+	ld a, (0xdfff)		; if (1p == spike)
+	or a
+	jr z, @@spike_1p
+
+
+	ld a, (0xc440)
+	res 4, a		; ai = snoopy
+	ld (0xc440), a
+
+	ret
+
+
+
+
+@@spike_1p:
+	ld a, 0x28		; sprite = spike
+	ld (0xc44f), a
+	ret
+
+
+
+
+; @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
+@game_ready_ai:
+@game_player_ai:
+@game_attack_ai:
+	ld a, (0xdfff)		; if (1p == spike)
+	or a
+	jr z, @@snoopy_1p
+
+
+	ld a, (0xc440)		; joypad = flip player
+	xor a, 0x10
+	ret
+
+
+
+
+@@snoopy_1p:
+	ld a, (0xc440)		; joypad = normal player
+	ret
+
+
+
+.if REGION == "JAPAN"
+	warnpc 0x7240
+
+.elseif REGION == "USA"
+	warnpc 0x7250
+
+.endif
+

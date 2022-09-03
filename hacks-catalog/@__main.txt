@@ -1,0 +1,10 @@
+.relativeinclude on
+
+
+.ifdef CHANGE_PLAYER
+	.include "change-player.txt"
+.endif
+
+
+
+.relativeinclude off
