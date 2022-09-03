@@ -1,0 +1,13 @@
+.relativeinclude on
+
+
+	.include "cutscene-ending-curtain.txt"
+	.include "cutscene-ending-load.txt"
+	.include "cutscene-title-walking.txt"
+	.include "game-draw-pause.txt"
+	.include "oam-upload-delay.txt"
+	.include "tiles-border-corner.txt"
+	.include "versus-win-ypos.txt"
+
+
+.relativeinclude off

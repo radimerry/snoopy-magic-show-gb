@@ -1,0 +1,84 @@
+/*
+Draws PAUSE sprite on top of everything
+
+
+Moves sprite ordering
+*/
+
+
+.if REGION == "JAPAN"
+	org 0x0, 0x38f1
+
+
+.elseif REGION == "USA"
+	org 0x0, 0x3903
+
+
+.endif
+
+
+	call @game_draw_pause
+	nop :: nop
+
+
+
+
+; ############################################################
+
+
+
+
+org 0x1, 0x7f60
+
+@game_draw_pause:
+	ldh a, (0xcb)		; number sprites
+	push af
+
+
+	push hl
+	push de
+
+
+	ld de, 0xc000		; oam table
+	ld hl, 0xc000
+
+	add a, a		; 4-byte sprite struct
+	add a, a
+	ld e, a
+
+	add a, 0x05*4		; 5 pause sprites
+	dec a
+	ld l, a
+
+
+
+@@copy:
+	dec e
+
+	ld a, (de)
+	ldd (hl), a
+
+	jr nz, @@copy
+
+
+
+	xor a			; write to oam 0
+	ldh (0xcb), a
+
+
+	pop hl
+	pop de
+
+
+	ld a, 0x1b		; draw pause sprite
+	call 0x119b
+
+
+	pop af			; old sprite count + 5
+	add a, 0x05
+	ldh (0xcb), a
+
+	ret
+
+
+warnpc 0x7f90

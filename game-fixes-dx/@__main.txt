@@ -1,0 +1,17 @@
+.relativeinclude on
+
+
+.if REGION == "JAPAN"
+.ifdef JAPAN_DX_MARC_MAX
+
+	.include "cutscene-ending-flag.txt"
+	.include "cutscene-ending-star.txt"
+	.include "cutscene-sleep-sky.txt"
+	.include "cutscene-title-load.txt"
+	.include "menu-versus-load.txt"
+
+.endif
+.endif
+
+
+.relativeinclude off

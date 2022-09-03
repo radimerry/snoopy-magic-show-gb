@@ -1,13 +1,14 @@
-Snoopy Magic Show - Protech Bug Eraser 0.2  [Radiant Nighte]
+Snoopy Magic Show - Protech Bug Eraser 0.3  [Radiant Nighte]
 
 
 
-Fixes:  [Japan, Usa, Japan dx 1.0 - marc_max]
+Fixes:  [Japan, USA, Japan DX 1.0 - marc_max]
 + Adds missing bottom star corners during ending
 + Adds missing bottom-right corner pixel of border window
 
 # Move victory pose ypos during versus win when other player dies
 # Move Snoopy and Spike starting position during title screen to avoid pop-in from right side
+# Move pause sprite to be on top of other graphics
 
 - Removes screen flicker during ending mid-scene
 - Removes sprite garbage during ending mid-scene
@@ -16,13 +17,15 @@ Fixes:  [Japan, Usa, Japan dx 1.0 - marc_max]
 
 
 
-Fixes:  [Japan dx 1.0 - marc_max]
+
+Fixes:  [Japan DX 1.0 - marc_max]
 + Adds missing pixel of flag during ending
 + Adds missing pixel of sky during story cutscene
 + Adds missing star and text animation during ending
 
 - Removes 1 frame of screen flicker during legal screen
 - Removes tile garbage and 1 frame of screen flicker during 2P versus menu
+
 
 
 
@@ -36,8 +39,11 @@ Tested patching order:
 
 
 
+
 Changelog:
+- 0.3   https://github.com/radimerry/snoopy-magic-show-gb/compare/game-fixes-0.2..game-fixes-0.3
 - 0.2   https://github.com/radimerry/snoopy-magic-show-gb/compare/game-fixes-0.1..game-fixes-0.2
+
 
 
 
