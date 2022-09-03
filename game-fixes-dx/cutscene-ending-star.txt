@@ -1,0 +1,77 @@
+/*
+Animate star palette
+
+
+Cycle through mono shades
+*/
+
+
+org 0x0, 0x33e4
+
+	ld hl, 0xc37f
+	ld a, (hl)
+	inc (hl)
+
+
+	and a, 0x03
+	add a, a
+	add a, a
+	add a, a
+	add a, @palette & 0xff
+	ld l, a
+	ld h, @palette >> 8
+
+
+	di
+	call @wait
+
+
+	ld b, 0x06
+
+@@loop:
+	ldi a, (hl)
+	ldh (0x69), a
+
+	dec b
+	jr nz, @@loop
+
+
+	reti
+
+
+warnpc 0x3400
+
+
+
+
+; #####################################################
+
+
+
+
+org 0x1, 0x7fc0
+
+
+@wait:
+	ldh a, (0x41)
+	and a, 0x03
+	cp a, 0x01
+	jr nz, @wait
+
+
+	ld a, 0x82		; bg 0 [1-2-3]
+	ldh (0x68), a
+
+	ret
+
+
+
+
+@palette:
+	.dh 0x79f2, 0x5ca8, 0x0000, 0x0000	; 210
+	.dh 0x5ca8, 0x0000, 0x5ca8, 0x0000	; 101
+	.dh 0x0000, 0x5ca8, 0x79f2, 0x0000	; 012
+	.dh 0x5ca8, 0x79f2, 0x5ca8, 0x0000	; 121
+
+
+warnpc 0x7ff0

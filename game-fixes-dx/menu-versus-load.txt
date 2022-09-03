@@ -1,0 +1,124 @@
+/*
+Removes garbage tiles when starting 2p game
+
+
+Clear tilemap and palette
+*/
+
+
+org 0x0, 0x2a60
+
+	ld a, orga(@versus_init)/0x4000
+	call 0x109e
+
+	call @versus_init
+
+	call 0x10ab
+
+
+	xor a
+	ld hl, 0xc4e8
+	ldi (hl), a
+	ldi (hl), a
+	ldi (hl), a
+	ldi (hl), a
+
+
+	call 0x7d7f
+
+
+warnpc 0x2a76
+
+
+
+
+; ######################################################
+
+
+
+
+org 0x4, 0x71c0
+
+@versus_init:
+	call 0x0310		; clear oam
+
+
+	call 0x031a		; lcd off
+	di
+
+
+
+; =====================================================
+
+
+
+	ld hl, 0x9c00-1		; tilemap
+	ld a, 0xff
+
+
+@@erase1:
+	ldd (hl), a
+
+	bit 3, h		; 97xx break
+	jr nz, @@erase1
+
+
+
+	ld a, 0x01
+	ldh (0x4f), a
+
+
+
+	ld hl, 0x9c00-1		; tilemap color
+	xor a
+
+
+@@erase2:
+	ldd (hl), a
+
+	bit 3, h		; 97xx break
+	jr nz, @@erase2
+
+
+
+	ldh (0x4f), a
+
+
+
+; =====================================================
+
+
+
+	ld a, 0x80		; bgp palette
+	ldh (0x68), a
+
+
+	ld a, 0xff
+	ld h, 0x20
+
+
+@@erase3:
+	ldh (0x69), a
+	ldh (0x69), a
+
+
+	dec h
+	jr nz, @@erase3
+
+
+
+; =====================================================
+
+
+
+	ei
+	call 0x0333		; lcd on
+
+
+	xor a			; stolen code
+	ld (0xc37c), a
+
+	ret
+
+
+warnpc 0x7200

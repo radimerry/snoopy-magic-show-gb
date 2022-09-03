@@ -1,0 +1,7 @@
+/*
+Recolor missing sky pixel near ear
+*/
+
+
+.org 0xa420
+	db 0x60, 0xe0

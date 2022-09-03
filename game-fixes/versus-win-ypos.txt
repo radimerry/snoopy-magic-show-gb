@@ -1,0 +1,43 @@
+/*
+Corrects sprite ypos when one player dies early
+
+
+Moves sprite upward 8 pixels like normal win
+*/
+
+
+.if REGION == "JAPAN"
+	org 0x1, 0x5b9d
+
+
+.elseif REGION == "USA"
+	org 0x1, 0x5bb0
+
+
+.endif
+
+
+	call @fix
+
+
+
+
+; ############################################################
+
+
+
+
+org 0x1, 0x7ff0
+
+@fix:
+	ld (0xc435),a		; other player died
+
+
+	ld a, (0xc427)		; move sprite upward
+	sub a, 0x08/2
+	ld (0xc427), a
+
+
+	ret
+
+warnpc 0x8000

@@ -1,0 +1,18 @@
+/*
+Recolor wrong flag pixels in Snoopy flag ending
+
+
+Use black pixels like in 1 of 3 frames
+*/
+
+
+.org 0xaef0
+	db 0xf4, 0xfc
+
+
+.org 0xb140
+	db 0xf4, 0xfc
+
+
+.org 0xb2a0
+;	db 0xf4, 0xfc

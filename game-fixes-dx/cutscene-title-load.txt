@@ -1,0 +1,45 @@
+/*
+Removes screen flash
+
+
+Keep screen on during uploads
+*/
+
+
+org 0x0, 0x1104
+	ld hl, 0x5800		; 2:5800-6000  [title logo]
+	ld de, 0x8800		; ==> 8800-9000  [800 bytes]
+
+
+@@loop:
+	di
+	ldh a, (0x41)
+	and a, 0x02		; vh-write
+	jr nz, @@loop
+
+
+	ldi a, (hl)
+	ld (de), a
+	ei
+
+
+	inc de			; 9xxx break
+	bit 4, d
+	jr z, @@loop
+
+
+	jr 0x111f
+
+
+warnpc 0x111f
+
+
+
+
+; #####################################################
+
+
+
+
+org 0x0, 0x262b
+	nop :: nop :: nop	; no tilemap reset

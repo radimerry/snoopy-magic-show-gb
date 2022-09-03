@@ -1,0 +1,13 @@
+/*
+Redraw bottom-right corner border
+
+
+Match pixels from other 3 corners
+*/
+
+
+; Valid for regions  (JAPAN, USA) + hacks (DX JAPAN - marc_max)
+
+
+.org 0x8f3e
+	db 0xfe, 0xfe

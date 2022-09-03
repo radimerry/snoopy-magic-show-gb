@@ -1,0 +1,21 @@
+/*
+Remove sprite upload delay
+
+
+Use upload queue. Stops 2 frame micro-stutters
+*/
+
+
+.if REGION == "JAPAN"
+	org 0x1, 0x4055
+
+
+.elseif REGION == "USA"
+	org 0x1, 0x4068
+
+
+.endif
+
+
+	jp 0x02e2
+	nop :: nop :: nop

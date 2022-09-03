@@ -1,0 +1,10 @@
+/*
+Draw missing closing curtain tiles
+
+
+Upload missing tilemap row
+*/
+
+
+org 0x0, 0x025b
+	cp a, 0x26+2	; flag partial row
